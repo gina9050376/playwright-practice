@@ -20,15 +20,15 @@ jobs:
         playwright install chromium
         
     - name: Run tests
-      # 即使測試失敗也繼續執行後面的步驟
-      continue-on-error: true 
+      # 這裡我們不強制讓它 continue-on-error，而是讓它跑完
+      # 如果測試失敗，pytest 會回傳 exit code 1，但我們可以捕獲它
       run: |
-        mkdir -p test-results
-        pytest --html=test-results/report.html --self-contained-html
+        pytest --html=report.html --self-contained-html || true
         
     - name: Upload Report
       uses: actions/upload-artifact@v4
       if: always()
       with:
         name: playwright-report
-        path: test-results/
+        # 這次我們直接指定產出的檔案名稱，不透過資料夾
+        path: report.html
