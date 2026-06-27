@@ -1,6 +1,4 @@
 name: Playwright Tests
-
-# 正確寫法如下：
 on:
   push:
     branches: [ main ]
@@ -20,3 +18,12 @@ jobs:
         playwright install chromium
     - name: Run tests
       run: pytest
+    
+    # 關鍵：加上這一段，測試跑完後就會自動出現 Artifacts
+    - name: Upload Report
+      uses: actions/upload-artifact@v4
+      if: always() # 無論測試成功或失敗都會執行
+      with:
+        name: playwright-report
+        path: |
+          test-results/
